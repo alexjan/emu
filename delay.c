@@ -4,14 +4,21 @@
 
 bit stop;
 
-void delay10Us(unsigned char countUs){
-        while(cnt--);
+void delay10Us(unsigned char count){
+    count--;
+//    delayUs();
+    while(count--){
+        delayUs();
+        delayUs();
+        delayUs();
+    }
 }
 
 void delayMs(unsigned char countMs){
-	while(countMs--) delay10Us(100);
+   
+//    
 }
 
-void dealayS(unsigned int countS){
-	while(countS--) delayUs(1000);
+void delayS(unsigned char countS){
+	while(--countS) delayMs(1000);
 }
