@@ -18,6 +18,7 @@
 void delay10Us(unsigned char);
 void delayMs(unsigned char);
 void delayS(unsigned char);
+//void delay(unsigned char);
 
 volatile unsigned char next;
 

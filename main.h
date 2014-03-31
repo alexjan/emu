@@ -1,4 +1,4 @@
-#include <htc.h>
+
 #include "delay.h"
 #include "lcd.h"
 

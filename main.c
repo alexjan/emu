@@ -1,3 +1,4 @@
+#include <htc.h>
 #include "main.h"
 
 __CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_ON & MCLRE_OFF & BOREN_ON & LVP_OFF);
@@ -5,35 +6,13 @@ __CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_ON & MCLRE_OFF & BOREN_ON & LVP_OFF);
 extern bit stop;
 
 void main(void) {
-//    di();
+    di();
     portIni();
-//    timerIni();
-//    ei();
-//    lcdIni();
-//    delay10Us();
-    delay10Us(0);
-    delay10Us(1);
-    delay10Us(2);
-    delay10Us(3);
-    delay10Us(4);
-    delay10Us(5);
-    delay10Us(6);
-    delay10Us(7);
-    delay10Us(8);
-    delay10Us(9);
-    delay10Us(200);
-    
-    delayS(1);
+    timerIni();
+    ei();
+    lcdIni();
 
-    delayS(2);
-
-
-
-
-
-
-    
-    while (true){
+    while (true) {
         CLRWDT();
         delayMs(200);
         putch('1');

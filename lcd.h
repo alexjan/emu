@@ -1,7 +1,7 @@
 #include "delay.h"
 
 #define lcdFillingEdge() Epin = true; Epin=false; delayUs()
-#define delay40uS() delay10Us;delay10Us;delay10Us;delay10Us
+//#define delay40uS() delay10Us;delay10Us;delay10Us;delay10Us
 #define lcdDataLO(n) PORTA = (n)
 #define lcdDataHI(n) PORTA = (n) >> 4
 
@@ -19,11 +19,11 @@
 #define IncCount 	0xFF		// 0b11111111
 #define DecCount 	0xFD		// 0b11111101
 #define ShiftEn  	0xFF		// 0b11111111
-#define ShiftDis 	0xFE        // 0b11111110
+#define ShiftDis 	0xFE            // 0b11111110
 
 #define DispControl   	0x0F		// 0b00001111
 /* SubCommnads */
-#define DisplOn		0xFF	    // 0b11111111
+#define DisplOn		0xFF            // 0b11111111
 #define DisplOff	0xF3		// 0b11111011
 #define CursLineOn	0xFF		// 0b11111111
 #define CursLineOff	0xFD		// 0b11111101
@@ -44,7 +44,7 @@
 #define Num2lStr    	0xFF		// 0b11111111
 #define NumHiStr	0xF7		// 0b11110111
 #define Size5x7		0xFF		// 0b11111111
-#define Size5x10    	0xFB        // 0b11111011
+#define Size5x10    	0xFB            // 0b11111011
 
 #define SetAdressCGRAM 	0x7F		// 0b01111111
 
