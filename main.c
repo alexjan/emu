@@ -4,6 +4,9 @@
 __CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_ON & MCLRE_OFF & BOREN_ON & LVP_OFF);
 
 extern bit stop;
+//bit Show;
+unsigned char cnt;
+extern const unsigned char  Kyrilica[];
 
 void main(void) {
     di();
@@ -11,12 +14,47 @@ void main(void) {
     timerIni();
     ei();
     lcdIni();
+    putst("Привет всем!\n");
+    cnt = 0;
+    
+//    while(cnt < 16){
 
-    while (true) {
-        CLRWDT();
-        delayMs(200);
-        putch('1');
-    }
+//    }
+
+
+//    cnt = 32;
+//    while (cnt--) {
+//
+//
+//
+//        putch(255 - cnt);
+//    }
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    cnt = 32;
+//    while (cnt--) {
+//
+//
+//        putch(223 - cnt);
+//    }
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    delayMs(250);
+//    cnt = 32;
+//    while (cnt--) {
+//        putch(191 - cnt);
+//    }
 }
 
 void interrupt my_funct_int(void) {
@@ -40,11 +78,11 @@ void portIni(void) {
     //        |+--------> 15 pin
     //        +---------> 16 pin
 
-    PORTB = 0b11111100;
+    PORTB = 0b11111000;
     TRISB = 0b11111000;
-    //        |||||||+-->  6 pin --> RS
-    //        ||||||+--->  7 pin --> RnW
-    //        |||||+---->  8 pin --> E
+    //        |||||||+-->  6 pin --> RS     (4)
+    //        ||||||+--->  7 pin --> RnW    (5)
+    //        |||||+---->  8 pin --> E      (6)
     //        |||+------>  9 pin
     //        ||||+-----> 10 pin
     //        ||+-------> 11 pin

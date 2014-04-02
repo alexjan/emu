@@ -1,9 +1,9 @@
 #include "delay.h"
 
-#define lcdFillingEdge() Epin = true; Epin=false; delayUs()
+
 //#define delay40uS() delay10Us;delay10Us;delay10Us;delay10Us
-#define lcdDataLO(n) PORTA = (n)
-#define lcdDataHI(n) PORTA = (n) >> 4
+#define lcdDataLO(n) (PORTA = (n))
+#define lcdDataHI(n) (PORTA = (n) >> 4)
 
 
 #define empty		0x11
@@ -65,3 +65,8 @@ void LcdWR(unsigned char, unsigned char);
 unsigned char lcdReadByte(void);
 static unsigned char CharPos;
 void putch(unsigned char);
+void putst(unsigned char *);
+unsigned int HexBcd(unsigned int);
+void PutBCDint(unsigned int);
+void ClrScrn(void);
+
