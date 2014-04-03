@@ -25,7 +25,7 @@ unsigned char scanch(void) {
 
 unsigned char getch(void) {
     static unsigned char Char;
-    unsigned char  countscan = 20;
+    unsigned char  countscan = 10;
     Char = scanch();
     delayMs(10);
     while ((Char == scanch()) && countscan--)delayMs(100);

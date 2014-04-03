@@ -18,12 +18,7 @@ extern "C" {
 
 #endif	/* KEY_H */
 
-#define keyUp RA7
-#define keyDown RA6
-#define keyOk RB3
-
 #define true 1
 #define false 0
-
 
 unsigned char getch(void);

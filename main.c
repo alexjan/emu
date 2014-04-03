@@ -1,12 +1,37 @@
 #include <htc.h>
 #include "main.h"
 
-__CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_ON & MCLRE_OFF & BOREN_ON & LVP_OFF);
+__IDLOC(0001);
+
+__CONFIG(FOSC_INTOSCIO &  \
+        WDTE_OFF &        \
+        PWRTE_ON &        \
+        MCLRE_OFF &       \
+        BOREN_ON &        \
+        LVP_OFF);
 
 extern bit stop;
-bit key_mode;
-unsigned char cnt, var;
-extern const unsigned char Kyrilica[];
+bit key_mode, RUN;
+unsigned int CountLitrs;
+
+bit ModeBlock,             \
+    ResBuf,                \
+    FullBuf,               \
+    uBlockGun,             \
+    Rise,                  \
+    RunInit,               \
+    RDimpuls,              \
+    key_mode,              \
+    RUN;
+
+volatile unsigned char cnt,                \
+                       TimeOutGun,         \
+                       Count200uS,         \
+                       Count10mS,          \
+                       var;
+
+unsigned int Buffer,                       \
+             count;
 
 void main(void) {
     di();
@@ -14,33 +39,83 @@ void main(void) {
     timerIni();
     ei();
     lcdIni();
-    putst("Привет всем!\n");
-    delayS(3);
-    ClrScrn();
     while (true) {
-        switch (getch()) {
-            case 'U': putst("Up  \n");
-                break;
-            case 'D': putst("Down\n");
-                break;
-            case 'Y': putst("Ok! \n");
-                break;
-            case 'L': putst("LO \n");
-                break;
-            case 'H': putst("HI \n");
-                break;
-            default:;
-        }
-    }
 
+        /*************************** System Timer *****************************/
+
+        if (Count200uS > 50) {
+            if (Count10mS++ > 100) {
+                if (!Start && (!FullBuf || ModeBlock)) {
+                    if (TimeOutGun++ > 60) {
+                        count = 3500;
+                        OGun = true;
+                        while (count--);
+                        TimeOutGun = 0;
+                    }
+                } else TimeOutGun = 0;
+                Count10mS = 0;
+            }
+            CLRWDT();
+            Count200uS = 0;
+        }
+
+        /************* System timer END ***************************************/
+
+        /************** Read & Control GUN ************************************/
+
+        if (uBlockGun) OGun = Start;
+
+        /**************** End Block *******************************************/
+
+        /********** Read Impuls ***********************************************/
+        if (Start) ResBuf = true;
+        else {
+            if (Start) {
+                if (RDimpuls) {
+                    if (ResBuf) {
+                        Buffer = 0xFFFF;
+                        ResBuf = false;
+                    }
+                    Buffer++;
+                    FullBuf = true;
+                    RDimpuls = false;
+                }
+            } else RDimpuls = true;
+        }
+
+        /************ End Block ***********************************************/
+
+        /************ Control Blocking ****************************************/
+
+        if (!ModeBlock && FullBuf && !Start) {
+            if (Rise) {
+                if (cnt > WidthImp) {
+                    OImpuls = true;
+                    cnt = 0;
+                    Rise = false;
+                }
+            } else if (cnt > PauseImp) {
+                Rise = true;
+                OImpuls = false;
+                cnt = 0;
+                if (!Buffer--) {
+                    uBlockGun = true;
+                    FullBuf = false;
+                }
+            }
+        }
+
+        /*********** End Block ************************************************/
+    }
 }
 
-void interrupt my_funct_int(void) {
+void interrupt MyInt(void) {
     if (T0IE && T0IF) {
-        if (next--) stop = false;
-        TMR0 = 55;
+        if (FullBuf) cnt++;
+        else cnt = 0;
+        Count200uS++;
+        TMR0 = 81;
         T0IF = false;
-        return;
     }
 }
 
@@ -71,22 +146,8 @@ void portIni(void) {
 }
 
 void timerIni(void) {
-
-#ifdef timer0
-
-    TMR0 = 55;
+    TMR0 = 150;
     T0IE = true;
     T0IF = false;
-    OPTION_REG &= 0b11011111;
-    //              |||||||+--> PS0
-    //              ||||||+---> PS1
-    //              |||||+----> PS2
-    //              ||||+-----> PSA
-    //              |||+------> T0SE
-    //              ||+-------> T0CS
-    //              |+--------> INTEDG
-    //              +---------> nRPBU
-
-#endif	
-
+    StartT0();
 }
