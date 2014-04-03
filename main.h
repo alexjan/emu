@@ -1,6 +1,7 @@
 
 #include "delay.h"
 #include "lcd.h"
+#include "key.h"
 
 #define false 0
 #define true 1

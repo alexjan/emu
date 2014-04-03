@@ -4,9 +4,9 @@
 __CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_ON & MCLRE_OFF & BOREN_ON & LVP_OFF);
 
 extern bit stop;
-//bit Show;
-unsigned char cnt;
-extern const unsigned char  Kyrilica[];
+bit key_mode;
+unsigned char cnt, var;
+extern const unsigned char Kyrilica[];
 
 void main(void) {
     di();
@@ -15,46 +15,24 @@ void main(void) {
     ei();
     lcdIni();
     putst("Привет всем!\n");
-    cnt = 0;
-    
-//    while(cnt < 16){
+    delayS(3);
+    ClrScrn();
+    while (true) {
+        switch (getch()) {
+            case 'U': putst("Up  \n");
+                break;
+            case 'D': putst("Down\n");
+                break;
+            case 'Y': putst("Ok! \n");
+                break;
+            case 'L': putst("LO \n");
+                break;
+            case 'H': putst("HI \n");
+                break;
+            default:;
+        }
+    }
 
-//    }
-
-
-//    cnt = 32;
-//    while (cnt--) {
-//
-//
-//
-//        putch(255 - cnt);
-//    }
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    cnt = 32;
-//    while (cnt--) {
-//
-//
-//        putch(223 - cnt);
-//    }
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    delayMs(250);
-//    cnt = 32;
-//    while (cnt--) {
-//        putch(191 - cnt);
-//    }
 }
 
 void interrupt my_funct_int(void) {
@@ -88,7 +66,7 @@ void portIni(void) {
     //        ||+-------> 11 pin
     //        |+--------> 12 pin
     //        +---------> 13 pin
-
+    nRBPU = false;
     CMCON |= 0x07;
 }
 

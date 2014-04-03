@@ -10,10 +10,10 @@
 
 /*                                         *//*  0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F  */
 const unsigned char Kyrilica[] = {						 															\
-					/* 0 */ 0x41, 0xA0, 0x42, 0xA1, 0xE0, 0x45, 0xA3, 0xA4, 0xA5, 0xA6, 0x4B, 0xA7, 0x4D, 0x48, 0x4F,          \
-					/* 1 */ 0xA8, 0x50, 0x43, 0x54, 0xA9, 0xAA, 0x58, 0xE1, 0xAB, 0xAC, 0xE2, 0xAD, 0xAE, 0x62, 0xAF, 0xB0,          \
-					/* 2 */ 0xB1, 0x61, 0xB2, 0xB3, 0xB4, 0xE3, 0x65, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xBB, 0xBC, 0xBD,          \
-					/* 3 */ 0x6F, 0xBE, 0x70, 0x63, 0xBF, 0x79, 0xE4, 0x78, 0xE5, 0xC0, 0xC1, 0xE6, 0xC2, 0xC3, 0xC4, 0xC5,          \
+					/* 0 */ 0x41, 0xA0, 0x42, 0xA1, 0xE0, 0x45, 0xA3, 0xA4, 0xA5, 0xA6, 0x4B, 0xA7, 0x4D, 0x48, 0x4F,           \
+					/* 1 */ 0xA8, 0x50, 0x43, 0x54, 0xA9, 0xAA, 0x58, 0xE1, 0xAB, 0xAC, 0xE2, 0xAD, 0xAE, 0x62, 0xAF, 0xB0,           \
+					/* 2 */ 0xB1, 0x61, 0xB2, 0xB3, 0xB4, 0xE3, 0x65, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xBB, 0xBC, 0xBD,           \
+					/* 3 */ 0x6F, 0xBE, 0x70, 0x63, 0xBF, 0x79, 0xE4, 0x78, 0xE5, 0xC0, 0xC1, 0xE6, 0xC2, 0xC3, 0xC4, 0xC5,           \
 					/* 4 */ 0xC6, 0xC7
 };
 
@@ -24,42 +24,24 @@ const unsigned char Kyrilica[] = {						 															\
                                          * 4	 ?    ?                                                                          */
 
 void lcdIni(void) {
-    //    while (true) {
-    //        delayMs(250);
-    //        delayMs(250);
-    //        delayMs(250);
-    //        lcdFillingEdge();
-    //        delayMs(250);
-    //        delayMs(250);
-    //        delayMs(250);
-    //        lcdFillingEdge();
-    //    }
-
-
-
-
     Epin = false;
     RSpin = false;
     RnWpin = false;
-
     // first step pause 15mS
     //----------------------------------
     delayMs(16);
     //----------------------------------
-
     // second step set 0x03 & wait 4.1mS
     //----------------------------------
     lcdDataLO(0x03);
     lcdFillingEdge();
     delayMs(5);
     //----------------------------------
-
     //theird step set 0x03 & wait 100uS
     //----------------------------------
     lcdFillingEdge();
     delay10Us(100);
     //----------------------------------
-
     // next step set 0x03 $ wait 40uS
     //----------------------------------
     lcdFillingEdge();
@@ -72,15 +54,6 @@ void lcdIni(void) {
     lcdFillingEdge();
     delay10Us(4);
     //----------------------------------
-
-    // next set 0x02
-    //----------------------------------
-    //    LcdWR(0x28, Command);
-    //
-    //    LcdWR(0x06, Command);
-    //
-    //    LcdWR(0x0E, Command);
-    //    LcdWR(0x01, Command);
     LcdWR(FunctionSet & DataLenght4b & Num2lStr & Size5x7, Command);
     LcdWR(DispControl & DisplOn & CursLineOff & CursSquOff, Command);
     LcdWR(ModeSet & IncCount & ShiftDis, Command);
@@ -89,7 +62,6 @@ void lcdIni(void) {
     LcdWR(SetAdressDDRAM & 0x80, Command);
     delayMs(2);
     //----------------------------------
-
 }
 
 void LcdWR(unsigned char DataVar, unsigned char mode) {
