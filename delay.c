@@ -2,7 +2,6 @@
 #include "delay.h"
 //Functions for clk = 4MHz (1 instruction = 1 uS)
 
-bit stop;
 
 void delay10Us(unsigned char count) {
     count--;

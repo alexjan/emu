@@ -16,7 +16,7 @@ unsigned int CountLitrs;
 
 bit ModeBlock,             \
     ResBuf,                \
-    FullBuf,               \
+    commandStart,          \
     uBlockGun,             \
     Rise,                  \
     RunInit,               \
@@ -37,23 +37,37 @@ void main(void) {
     di();
     portIni();
     timerIni();
-    ei();
     lcdIni();
+    
+    RunInit = false;
+
+/******************************************************************************/
+
+    if (nPOR) {
+        if (nBOR) {
+            if (!nTO) {
+                if (nPD) {
+                    RunInit = true; // WDT Reset
+                    // Here Set error.....
+                } else; // WDT Wake-up "Nothing"
+            }
+        } else {
+            RunInit = true; //Brown-out Reset
+        }
+    } else if (!nTO || !nPD) {
+        RunInit = true; //Power-on Reset
+    }
+/******************************************************************************/    
+    ei();
+
     while (true) {
 
         /*************************** System Timer *****************************/
 
         if (Count200uS > 50) {
             if (Count10mS++ > 100) {
-                if (!Start && (!FullBuf || ModeBlock)) {
-                    if (TimeOutGun++ > 60) {
-                        count = 3500;
-                        OGun = true;
-                        while (count--);
-                        TimeOutGun = 0;
-                    }
-                } else TimeOutGun = 0;
-                Count10mS = 0;
+	    	
+	    	}Count10mS = 0;
             }
             CLRWDT();
             Count200uS = 0;
@@ -61,33 +75,9 @@ void main(void) {
 
         /************* System timer END ***************************************/
 
-        /************** Read & Control GUN ************************************/
+        /************ Unload Buffer ****************************************/
 
-        if (uBlockGun) OGun = Start;
-
-        /**************** End Block *******************************************/
-
-        /********** Read Impuls ***********************************************/
-        if (Start) ResBuf = true;
-        else {
-            if (Start) {
-                if (RDimpuls) {
-                    if (ResBuf) {
-                        Buffer = 0xFFFF;
-                        ResBuf = false;
-                    }
-                    Buffer++;
-                    FullBuf = true;
-                    RDimpuls = false;
-                }
-            } else RDimpuls = true;
-        }
-
-        /************ End Block ***********************************************/
-
-        /************ Control Blocking ****************************************/
-
-        if (!ModeBlock && FullBuf && !Start) {
+        if (commandStart) {
             if (Rise) {
                 if (cnt > WidthImp) {
                     OImpuls = true;
@@ -100,19 +90,18 @@ void main(void) {
                 cnt = 0;
                 if (!Buffer--) {
                     uBlockGun = true;
-                    FullBuf = false;
+                    commandStart = false;
                 }
             }
         }
 
         /*********** End Block ************************************************/
     }
-}
+
 
 void interrupt MyInt(void) {
     if (T0IE && T0IF) {
-        if (FullBuf) cnt++;
-        else cnt = 0;
+        
         Count200uS++;
         TMR0 = 81;
         T0IF = false;
