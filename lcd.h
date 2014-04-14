@@ -2,9 +2,27 @@
 
 
 //#define delay40uS() delay10Us;delay10Us;delay10Us;delay10Us
-#define lcdDataLO(n) (PORTA = (n))
-#define lcdDataHI(n) (PORTA = (n) >> 4)
+#define lcdDataLO(n) (PORTB = (n) >> 4, DB4 = (n) >> 1,DB5 = (n))
+#define lcdDataHI(n) (PORTB = (n),DB4 = (n) >> 6,DB5 = (n) >> 5)
 
+
+#define RSpin           PORTBbits.RB1       // ->  6  -  control LCD RS
+#define RnWpin          PORTBbits.RB2       // ->  7  -  control LCD R/nW
+#define Epin            PORTBbits.RB3       // ->  8  -  control LCD E
+//#define KeyDown         PORTBbits.RB0       // ->  9  -  Key Buttom [down]
+//#define KeyUp           PORTBbits.RB4       // ->  10 -  Key Buttom [Up]
+//#define KeyOk           PORTBbits.RB5       // ->  11 -  Key Buttom [OK]
+//#define ICSPdat         PORTBbits.RB6       // ->  12 -  ICSP Data
+//#define ICSPclk         PORTBbits.RB7       // ->  13 -  ICSP CLK
+
+#define DB4             PORTBbits.RB4       // ->  17 -  LCD data bus
+#define DB5             PORTBbits.RB5       // ->  18 -  LCD data bus
+#define DB6             PORTBbits.RB6       // ->  1  -  LCD data bus
+#define DB7             PORTBbits.RB7       // ->  2  -  LCD data bus
+#define OImpuls         PORTAbits.RA4       // ->  3  -
+#define Vpp             PORTAbits.RA5       // ->  4  -
+#define OGun            PORTAbits.RA6       // ->  15 -
+#define Start           PORTAbits.RA7       // ->  16 -
 
 #define empty		0x11
 
