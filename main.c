@@ -11,27 +11,39 @@ extern const unsigned char Kyrilica[];
 void main(void) {
     di();
     portIni();
-    timerIni();
-    ei();
-    lcdIni();
+    //    timerIni();
+    //    lcdIni();
+    //    ei();
+//    while (true) {
+//        lcdDataHI(0x30);
+//        delayS(2);
+//        lcdDataHI(0xC0);
+//        delayS(2);
+//    }
+
+
     putst("Привет всем!\n");
-    delayS(3);
-    ClrScrn();
     while (true) {
-        switch (getch()) {
-            case 'U': putst("Up  \n");
-                break;
-            case 'D': putst("Down\n");
-                break;
-            case 'Y': putst("Ok! \n");
-                break;
-            case 'L': putst("LO \n");
-                break;
-            case 'H': putst("HI \n");
-                break;
-            default:;
-        }
+        delayMs(250);
+        putch('2');
     }
+    //    delayS(3);
+    //    ClrScrn();
+    //    while (true) {
+    //        switch (getch()) {
+    //            case 'U': putst("Up  \n");
+    //                break;
+    //            case 'D': putst("Down\n");
+    //                break;
+    //            case 'Y': putst("Ok! \n");
+    //                break;
+    //            case 'L': putst("LO \n");
+    //                break;
+    //            case 'H': putst("HI \n");
+    //                break;
+    //            default:;
+    //        }
+    //    }
 
 }
 
@@ -45,29 +57,30 @@ void interrupt my_funct_int(void) {
 }
 
 void portIni(void) {
-    PORTA = 0b11110000;
-    TRISA = 0b11110000;
-    //        |||||||+--> 17 pin --> Data4 (11)
-    //        ||||||+---> 18 pin --> Data5 (12)
-    //        |||||+---->  1 pin --> Data6 (13)
-    //        ||||+----->  2 pin --> Data7 (14)
+    PORTA = 0b00000000;
+    TRISA = 0b00000000;
+    //        |||||||+--> 17 pin 
+    //        ||||||+---> 18 pin
+    //        |||||+---->  1 pin
+    //        ||||+----->  2 pin
     //        |||+------>  3 pin
     //        ||+------->  4 pin
     //        |+--------> 15 pin
     //        +---------> 16 pin
 
-    PORTB = 0b11111000;
-    TRISB = 0b11111000;
-    //        |||||||+-->  6 pin --> RS     (4)
-    //        ||||||+--->  7 pin --> RnW    (5)
-    //        |||||+---->  8 pin --> E      (6)
-    //        |||+------>  9 pin
-    //        ||||+-----> 10 pin
-    //        ||+-------> 11 pin
-    //        |+--------> 12 pin
-    //        +---------> 13 pin
+    PORTB = 0b00000000;
+    TRISB = 0b00000000;
+    //        |||||||+-->  6 pin
+    //        ||||||+--->  7 pin --> RS     (4)
+    //        |||||+---->  8 pin --> RnW    (5)
+    //        ||||+----->  9 pin --> E      (6)
+    //        |||+------> 10 pin --> Data4 (11)
+    //        ||+-------> 11 pin --> Data5 (12)
+    //        |+--------> 12 pin --> Data6 (13)
+    //        +---------> 13 pin --> Data7 (14)
     nRBPU = false;
     CMCON |= 0x07;
+    return;
 }
 
 void timerIni(void) {
@@ -88,5 +101,5 @@ void timerIni(void) {
     //              +---------> nRPBU
 
 #endif	
-
+    return;
 }

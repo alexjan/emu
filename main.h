@@ -7,9 +7,9 @@
 #define true 1
 #define timer0
 
-#define RSpin RB0
-#define RnWpin RB1
-#define Epin RB2
+#define RSpin RB1       // RB.1(7) - pin.4 LCD
+#define RnWpin RB2      // RB.2(8) - pin.5 LCD
+#define Epin RB3        // RB.3(9) - pin.6 LCD
 
 void timerIni(void);
 void portIni(void);

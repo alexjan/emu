@@ -12,6 +12,7 @@ void delay10Us(unsigned char count) {
         delayUs();
         delayUs();
     }
+    return;
 }
 
 void delayMs(unsigned char countMs) {
@@ -21,6 +22,7 @@ void delayMs(unsigned char countMs) {
         delayUs();
         delayUs();
     } while (countMs--);
+    return;
 }
 
 void delayS(unsigned char countS) {
@@ -31,5 +33,6 @@ void delayS(unsigned char countS) {
         while (cnt--) delayMs(100);
     }
     while(countS--);
+    return;
     
 }

@@ -1,9 +1,8 @@
 #include "delay.h"
 
+//extern static bit temp;
 
 //#define delay40uS() delay10Us;delay10Us;delay10Us;delay10Us
-#define lcdDataLO(n) (PORTA = (n))
-#define lcdDataHI(n) (PORTA = (n) >> 4)
 
 
 #define empty		0x11
@@ -59,14 +58,17 @@
 #define Command 	false
 #define Data 		true
 
+#define lcdDataLO(n) (PORTB &= 0x0F, PORTB |= (n) << 4)
+#define lcdDataHI(n) (PORTB &= 0x0F, PORTB |= (n) & 0xF0)
+
 void lcdIni(void);
 //void lcdWriteByte(unsigned char);
 void LcdWR(unsigned char, unsigned char);
-unsigned char lcdReadByte(void);
+unsigned char LcdRD(void);
 static unsigned char CharPos;
 void putch(unsigned char);
 void putst(unsigned char *);
 unsigned int HexBcd(unsigned int);
 void PutBCDint(unsigned int);
 void ClrScrn(void);
-
+unsigned char swap2bit(unsigned char, unsigned char);
