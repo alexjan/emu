@@ -45,7 +45,7 @@ void interrupt my_funct_int(void) {
 }
 
 void portIni(void) {
-    PORTA = 0b11110000;
+    PORTA = 0b11111111;
     TRISA = 0b11111111;
     //        |||||||+--> 17 pin --> Data4 (11)
     //        ||||||+---> 18 pin --> Data5 (12)
@@ -56,8 +56,8 @@ void portIni(void) {
     //        |+--------> 15 pin
     //        +---------> 16 pin
 
-    PORTB = 0b00000000;
-    TRISB = 0b00000000;
+    PORTB = 0b00000001;
+    TRISB = 0b00000001;
     //        |||||||+-->  6 pin --> RS     (4)
     //        ||||||+--->  7 pin --> RnW    (5)
     //        |||||+---->  8 pin --> E      (6)
@@ -77,7 +77,7 @@ void timerIni(void) {
     TMR0 = 55;
     T0IE = true;
     T0IF = false;
-    OPTION_REG &= 0b11011111;
+    OPTION_REG &= 0b01011111;
     //              |||||||+--> PS0
     //              ||||||+---> PS1
     //              |||||+----> PS2
