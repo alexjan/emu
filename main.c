@@ -3,9 +3,10 @@
 
 __CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_OFF & MCLRE_OFF & BOREN_ON & LVP_OFF);
 
-extern bit stop;
-bit key_mode;
+bit stop, bshow1, bshow2, bshow3, bshow4;
+bit key_mode, edit, edit1, blink;
 unsigned char cnt, var;
+unsigned int bufferL, bufferG, cena;
 extern const unsigned char Kyrilica[];
 
 void main(void) {
@@ -14,20 +15,114 @@ void main(void) {
     timerIni();
     ei();
     lcdIni();
-    putst("Привет всем!\n");
-    delayS(3);
+    bshow1 = true;
+    bshow2 = true;
+    bshow3 = true;
+    bshow4 = true;
+    putst("Эмулятор\n");
+    putst("ver 1.00\n");
+    delayS(1);
     ClrScrn();
     while (true) {
         switch (getch()) {
-            case 'U': putst("Up  \n");
+            case 'U':
+                ClrScrn();
+                putst("Набор[л]\n");
+                SetAdr(10);
+                putBCDint(HexBcd(bufferL));
+                edit = true;
+                bshow1 = false;
+                while (edit) {
+                    switch (getch()) {
+                        case 'U': SetAdr(10);
+                            putBCDint(HexBcd(++bufferL));
+                            break;
+                        case 'D': SetAdr(10);
+                            putBCDint(HexBcd(--bufferL));
+                            break;
+                        case 'Y':
+                            edit1 = true;
+                            bshow2 = false;
+                            bshow1 = true;
+                            while (edit1) {
+                                switch (getch()) {
+                                    case 'U': SetAdr(10);
+                                        putBCDint(HexBcd(bufferL+=10));
+                                        break;
+                                    case 'D': SetAdr(10);
+                                        putBCDint(HexBcd(bufferL-=10));
+                                        break;
+                                    case 'H': edit1 = false;
+                                        bshow2 = true;
+                                        bshow1 = false;
+                                        break;
+                                    default:;
+
+                                }
+
+
+                            }
+
+                        case 'H':
+                            ClrScrn();
+                            edit = false;
+                            break;
+                        default:;
+                    }
+                }
                 break;
-            case 'D': putst("Down\n");
+            case 'D': ClrScrn();
+                putst("Набор[Г]\n");
+                SetAdr(10);
+                putBCDint(HexBcd(bufferG));
+                edit = true;
+                while (edit) {
+                    switch (getch()) {
+                        case 'U': bufferG++;
+                            SetAdr(10);
+                            putBCDint(HexBcd(bufferG));
+                            break;
+                        case 'D': bufferG--;
+                            SetAdr(10);
+                            putBCDint(HexBcd(bufferG));
+                            break;
+                        case 'H':
+                            ClrScrn();
+                            edit = false;
+                            break;
+                        default:;
+                    }
+                }
+
                 break;
             case 'Y': putst("Ok! \n");
                 break;
-            case 'L': putst("LO \n");
+            case 'L':ClrScrn();
+                putst("Цена [Г]\n");
+                SetAdr(10);
+                putBCDint(HexBcd(cena));
+                edit = true;
+                while (edit) {
+                    switch (getch()) {
+                        case 'U': cena++;
+                            SetAdr(10);
+                            putBCDint(HexBcd(cena));
+                            break;
+                        case 'D': cena--;
+                            SetAdr(10);
+                            putBCDint(HexBcd(cena));
+                            break;
+                        case 'H':
+                            ClrScrn();
+                            edit = false;
+                            break;
+                        default:;
+                    }
+                }
                 break;
-            case 'H': putst("HI \n");
+            case 'H':
+                putst("Эмулятор\n");
+                putst("ver 1.00\n");
                 break;
             default:;
         }
@@ -36,9 +131,15 @@ void main(void) {
 }
 
 void interrupt my_funct_int(void) {
+    static unsigned int tim;
     if (T0IE && T0IF) {
-        if (next--) stop = false;
-        TMR0 = 55;
+        if (!tim--) {
+            blink = !blink;
+            SetAdr(10);
+            putBCDint(HexBcd(bufferL));
+            tim = 2000;
+        }
+        TMR0 = 90;
         T0IF = false;
         return;
     }

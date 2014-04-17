@@ -21,9 +21,10 @@ unsigned char scanch(void) {
 unsigned char getch(void) {
     static unsigned char Char;
     unsigned char countscan = 5;
+    key_mode = false;
     Char = scanch();
     delayMs(10);
-    while ((Char == scanch()) && countscan--)delayMs(100);
-    if (!countscan)key_mode = true;
+    while ((Char == scanch()) && countscan--)delayMs(20);
+    if(!countscan)key_mode = true;
     return Char;
 }

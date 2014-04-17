@@ -62,11 +62,12 @@
 void lcdIni(void);
 //void lcdWriteByte(unsigned char);
 void LcdWR(unsigned char, unsigned char);
+void SetAdr(unsigned char);
 unsigned char lcdReadByte(void);
 static unsigned char CharPos;
 void putch(unsigned char);
 void putst(unsigned char *);
 unsigned int HexBcd(unsigned int);
-void PutBCDint(unsigned int);
+void putBCDint(unsigned int);
 void ClrScrn(void);
 
