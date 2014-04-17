@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_ON & MCLRE_OFF & BOREN_ON & LVP_OFF);
+__CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_OFF & MCLRE_OFF & BOREN_ON & LVP_OFF);
 
 extern bit stop;
 bit key_mode;
@@ -46,7 +46,7 @@ void interrupt my_funct_int(void) {
 
 void portIni(void) {
     PORTA = 0b11110000;
-    TRISA = 0b11110000;
+    TRISA = 0b11111111;
     //        |||||||+--> 17 pin --> Data4 (11)
     //        ||||||+---> 18 pin --> Data5 (12)
     //        |||||+---->  1 pin --> Data6 (13)
@@ -56,8 +56,8 @@ void portIni(void) {
     //        |+--------> 15 pin
     //        +---------> 16 pin
 
-    PORTB = 0b11111000;
-    TRISB = 0b11111000;
+    PORTB = 0b00000000;
+    TRISB = 0b00000000;
     //        |||||||+-->  6 pin --> RS     (4)
     //        ||||||+--->  7 pin --> RnW    (5)
     //        |||||+---->  8 pin --> E      (6)

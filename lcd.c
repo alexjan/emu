@@ -81,26 +81,27 @@ unsigned char lcdReadByte(void) {
 void SetAdr(unsigned char adr) {
     //     unsigned char Adres;
     //     CharPos = adr;
-    CharPos = adr | 0x20; //001SAAAAB
-    CharPos &= 0xF0; //001S0000B
-    CharPos <<= 2; //1S000000B
-    CharPos |= adr & 0x0F; //1S00AAAAB
+    // if adr = 8 (0b00001000)
+    CharPos = adr | 0x10; //0001SAAAB
+    CharPos &= 0xF8; //0001S000B
+    CharPos <<= 3; //1S000000B
+    CharPos |= adr & 0x07; //1S00AAAAB
     LcdWR(CharPos, Command); //
     CharPos = adr;
 }
 
 void putch(unsigned char Char) {
     if (Char == '\n') {
-        if (CharPos < 16) CharPos = 16;
+        if (CharPos < 8) CharPos = 8;
         else CharPos = 0;
         SetAdr(CharPos);
     } else {
         if (Char > 0x7F) Char = Kyrilica[Char - 0xC0];
         LcdWR(Char, Data);
         switch (++CharPos) {
-            case 16: SetAdr(16);
+            case 8: SetAdr(8);
                 break;
-            case 32: SetAdr(0);
+            case 16: SetAdr(0);
                 CharPos = 0;
                 break;
             default:;

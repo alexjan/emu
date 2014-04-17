@@ -18,9 +18,9 @@ extern "C" {
 
 #endif	/* KEY_H */
 
-#define keyUp RA7
-#define keyDown RA6
-#define keyOk RB3
+#define keyUp RB0       // 6
+#define keyDown RA3     // 2
+#define keyOk RA2       // 1
 
 #define true 1
 #define false 0

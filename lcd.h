@@ -2,8 +2,8 @@
 
 
 //#define delay40uS() delay10Us;delay10Us;delay10Us;delay10Us
-#define lcdDataLO(n) (PORTA = (n))
-#define lcdDataHI(n) (PORTA = (n) >> 4)
+#define lcdDataLO(n) (PORTB &= 0x0F,PORTB |= (n) << 4)
+#define lcdDataHI(n) (PORTB &= 0x0F,PORTB |= (n) & 0xF0)
 
 
 #define empty		0x11

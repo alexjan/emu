@@ -6,16 +6,21 @@ extern bit key_mode;
 
 unsigned char scanch(void) {
     unsigned char scancode;
-    switch((PORTB >> 3) & 7){
-        case 0b011 : scancode = 'Y';
+    scancode = 7;
+    keyUp ? scancode |= 4 :  scancode &= 3;
+    keyDown ? scancode |= 2 :  scancode &= 5;
+    keyOk ? scancode |= 1 :  scancode &= 6;
+       
+    switch(scancode){
+        case 0b110 : scancode = 'Y';
         break;
-        case 0b110 : scancode = 'D';
+        case 0b101 : scancode = 'D';
         break;
-        case 0b101 : scancode ='U';
+        case 0b011 : scancode ='U';
         break;
-        case 0b100 : scancode = 'L';
+        case 0b001 : scancode = 'L';
         break;
-        case 0b001 : scancode ='H';
+        case 0b100 : scancode ='H';
         break;        
         default : scancode ='N';
     }
