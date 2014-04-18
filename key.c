@@ -20,10 +20,10 @@ unsigned char scanch(void) {
 
 unsigned char getch(void) {
     static unsigned char Char;
-    unsigned char countscan = 5;
+    unsigned char countscan = 100;
     key_mode = false;
     Char = scanch();
-    delayMs(10);
+    delayMs(20);
     while ((Char == scanch()) && countscan--)delayMs(20);
     if(!countscan)key_mode = true;
     return Char;

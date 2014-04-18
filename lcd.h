@@ -67,7 +67,9 @@ unsigned char lcdReadByte(void);
 static unsigned char CharPos;
 void putch(unsigned char);
 void putst(unsigned char *);
+unsigned char HB(unsigned char);      // Hex --> BCD char
 unsigned int HexBcd(unsigned int);
+void putBCD(unsigned char);
 void putBCDint(unsigned int);
 void ClrScrn(void);
 
