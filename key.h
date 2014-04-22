@@ -27,3 +27,5 @@ extern "C" {
 
 
 unsigned char getch(void);
+unsigned char get(void);
+unsigned char scanch(void);

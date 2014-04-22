@@ -6,14 +6,14 @@
 
 #define lcdFillingEdge() (Epin=true , Epin=false)
 
-extern bit digit1, digit2, digit3, digit4, mode1, mode2, blink;
+extern bit blink;
 
 /*                                         *//*  0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F  */
 const unsigned char Kyrilica[] = {						 															\
-					/* 0 */ 0x41, 0xA0, 0x42, 0xA1, 0xE0, 0x45, 0xA3, 0xA4, 0xA5, 0xA6, 0x4B, 0xA7, 0x4D, 0x48, 0x4F,               \
-					/* 1 */ 0xA8, 0x50, 0x43, 0x54, 0xA9, 0xAA, 0x58, 0xE1, 0xAB, 0xAC, 0xE2, 0xAD, 0xAE, 0x62, 0xAF, 0xB0,               \
-					/* 2 */ 0xB1, 0x61, 0xB2, 0xB3, 0xB4, 0xE3, 0x65, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xBB, 0xBC, 0xBD,               \
-					/* 3 */ 0x6F, 0xBE, 0x70, 0x63, 0xBF, 0x79, 0xE4, 0x78, 0xE5, 0xC0, 0xC1, 0xE6, 0xC2, 0xC3, 0xC4, 0xC5,               \
+					/* 0 */ 0x41, 0xA0, 0x42, 0xA1, 0xE0, 0x45, 0xA3, 0xA4, 0xA5, 0xA6, 0x4B, 0xA7, 0x4D, 0x48, 0x4F,                                           \
+					/* 1 */ 0xA8, 0x50, 0x43, 0x54, 0xA9, 0xAA, 0x58, 0xE1, 0xAB, 0xAC, 0xE2, 0xAD, 0xAE, 0x62, 0xAF, 0xB0,                                           \
+					/* 2 */ 0xB1, 0x61, 0xB2, 0xB3, 0xB4, 0xE3, 0x65, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xBB, 0xBC, 0xBD,                                           \
+					/* 3 */ 0x6F, 0xBE, 0x70, 0x63, 0xBF, 0x79, 0xE4, 0x78, 0xE5, 0xC0, 0xC1, 0xE6, 0xC2, 0xC3, 0xC4, 0xC5,                                           \
 					/* 4 */ 0xC6, 0xC7
 };
 
@@ -124,33 +124,32 @@ void putBCD(unsigned char varBCD) {
 }
 
 void putBCDint(unsigned int VarBCDint) {
-    if (VarBCDint & 0xF000 && (blink || digit4))putch((unsigned char) ((VarBCDint >> 12) & 0x0F) + 0x30);
+    if (VarBCDint & 0xF000)putch((unsigned char) ((VarBCDint >> 12) & 0x0F) + '0');
     else putch(' ');
-    if(blink || digit3)putch((unsigned char) ((VarBCDint >> 8) & 0x0F) + 0x30);
-    else putch(' ');
-    if(mode2)putch(',');
-    if(blink || digit2)putch((((unsigned char) VarBCDint >> 4) & 0x0F) + 0x30);
-    else putch(' ');
-    if(mode1)putch(',');
-    if(blink || digit1)putch(((unsigned char) VarBCDint & 0x0F) + 0x30);
-    else putch(' ');
+    putch((unsigned char) ((VarBCDint >> 8) & 0x0F) + '0');
+    putch(',');
+    putch((((unsigned char) VarBCDint >> 4) & 0x0F) + '0');
+    putch(((unsigned char) VarBCDint & 0x0F) + '0');
 }
-
-unsigned char HB(unsigned char varch){
-    unsigned char cnt = 0;
-    do {
-        if ((varch >> (cnt << 2) & 0x0F) > 9) varch -= 0x06 << (cnt << 2);
-    } while (++cnt < 2);
-    return varch;
-}
-
 
 unsigned int HexBcd(unsigned int dat) {
+    unsigned int tmpvar = 0;
     unsigned char cnt = 0;
-    do {
-        if ((dat >> (cnt << 2) & (unsigned int) 0x0F) > 9) dat -= (unsigned int) 0x06 << (cnt << 2);
-    } while (++cnt < 4);
-    return dat;
+    while (dat) {
+        tmpvar <<= 4;
+        tmpvar |= (dat % 10);
+        dat /= 10;
+        cnt++;
+    }
+//    dat = 0;
+//    while (cnt--) {
+//        if (cnt) {
+//            dat <<= 4;
+//            tmpvar >>= 4;
+//        }
+//        dat |= tmpvar & (unsigned char) 0x0F;
+//    }
+    return tmpvar;
 }
 
 void putst(unsigned char *string) {
@@ -158,5 +157,11 @@ void putst(unsigned char *string) {
         putch(*(string++));
     } while (*string != '\n');
     putch('\n');
+}
+
+void printD(unsigned int num) {
+    SetAdr(11);
+    putBCDint(HexBcd(num));
+    return;
 }
 

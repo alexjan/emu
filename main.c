@@ -3,11 +3,12 @@
 
 __CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_OFF & MCLRE_OFF & BOREN_ON & LVP_OFF);
 
-bit stop, editdig1, editdig2, editdig3, editdig4, editdig5, editdig6;
-bit key_mode, edit, blink, digit1, digit2, digit3, digit4, mode1, mode2;
+bit scan;
+bit press_buttom, edit, blink;
 unsigned char cnt, var;
 unsigned int bufferL, bufferG, cena;
 extern const unsigned char Kyrilica[];
+unsigned char Char;
 
 void main(void) {
     di();
@@ -15,100 +16,32 @@ void main(void) {
     timerIni();
     ei();
     lcdIni();
-    digit1 = true;
-    digit2 = true;
-    digit3 = true;
-    digit4 = true;
-    mode1 = false;
-    mode2 = true;
-    edit = false;
+
     //    putst("Эмулятор\n");
     //    putst("ver 1.00\n");
     SetAdr(0);
     putst("Набор[л]\n");
     while (true) {
-        if (!edit) {
-            switch (getch()){
-                case 'Y':
-                edit = true;
-                digit1 = false;
-                break;
-                default:;
-            }
-        }
-
-        while (!digit1) {
-            switch (getch()) {
-                case'U':
-                    bufferL++;
-                    break;
-                case 'D':
-                    digit1 = true;
-                    digit2 = false;
-                    break;
-                default:
-                    digit1 = true;
-                    edit = false;
-            }
-        }
-        //        while (!digit2) {
-        //            switch (getch()) {
-        //                case'U':
-        //                    bufferL += 10;
-        //                    break;
-        //                case 'D':
-        //                    digit2 = true;
-        //                    digit3 = false;
-        //                    break;
-        //                default:
-        //                    digit2 = true;
-        //                    edit = false;
-        //            }
-        //        }
-        //        while (!digit3) {
-        //            switch (getch()) {
-        //                case'U':
-        //                    bufferL += 100;
-        //                    break;
-        //                case 'D':
-        //                    digit3 = true;
-        //                    digit4 = false;
-        //                    break;
-        //                default:
-        //                    digit3 = true;
-        //                    edit = false;
-        //            }
-        //        }
-        //        while (!digit4) {
-        //            switch (getch()) {
-        //                case'U':
-        //                    bufferL += 1000;
-        //                    break;
-        //                case 'D':
-        //                    digit4 = true;
-        //                    //                        digit5 = false;
-        //                    break;
-        //                default:
-        //                    digit4 = true;
-        //                    edit = false;
-        //            }
-        //
-        //        }
+        var = get();
+        if (var == 'Y') {
+            bufferL += 25;
+        };
+        printD(bufferL);
     }
 }
 
 void interrupt my_funct_int(void) {
-    static unsigned int tim;
+    static unsigned char tim, tim_l;
     if (T0IE && T0IF) {
         if (!tim--) {
-            blink = !blink;
-            //            if (editdig1) {
-            SetAdr(11);
-            putBCDint(HexBcd(bufferL));
-            //            }
-            tim = 2000;
+            if (!tim_l--) {
+                blink = true; //!blink;
+                tim_l = 25;
+            }
+            if (scan)Char = scanch();
+            tim = 99;
         }
-        TMR0 = 90;
+        TMR0 = 87;
         T0IF = false;
         return;
     }

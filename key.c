@@ -2,7 +2,8 @@
 #include"key.h"
 #include"delay.h"
 
-extern bit key_mode;
+extern bit press_buttom, scan;
+extern unsigned char Char;
 
 unsigned char scanch(void) {
     unsigned char scancode;
@@ -10,8 +11,7 @@ unsigned char scanch(void) {
         if (!keyUp)scancode = 'H';
         else if (!keyDown)scancode = 'L';
         else scancode = 'Y';
-    }
-    else if (!keyUp)scancode = 'U';
+    } else if (!keyUp)scancode = 'U';
     else if (!keyDown)scancode = 'D';
     else scancode = 'N';
     return scancode;
@@ -19,12 +19,27 @@ unsigned char scanch(void) {
 }
 
 unsigned char getch(void) {
-    static unsigned char Char;
-    unsigned char countscan = 100;
-    key_mode = false;
-    Char = scanch();
-    delayMs(20);
-    while ((Char == scanch()) && countscan--)delayMs(20);
-    if(!countscan)key_mode = true;
+    static unsigned char tempch;
+    scan = true;
+    do {
+        Char = false;
+        while (!Char);
+        tempch = Char;
+        Char = false;
+        while (!Char);
+    } while (Char != tempch);
+    scan = false;
     return Char;
+}
+
+unsigned char get(void) {
+    unsigned char tmpch, count = 10;
+    tmpch = getch();
+    if (tmpch == 'N');
+    else {
+        while (--count) {
+            if (tmpch != getch())break;
+        }
+    }
+    return tmpch;
 }
