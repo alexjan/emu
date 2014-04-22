@@ -59,18 +59,17 @@
 #define Command 	false
 #define Data 		true
 
+
+static unsigned char CharPos;
+
+
 void lcdIni(void);
-//void lcdWriteByte(unsigned char);
 void LcdWR(unsigned char, unsigned char);
 void SetAdr(unsigned char);
 unsigned char lcdReadByte(void);
-static unsigned char CharPos;
 void putch(unsigned char);
 void putst(unsigned char *);
-unsigned char HB(unsigned char); // Hex --> BCD char
-unsigned int HexBcd(unsigned int);
-void putBCD(unsigned char);
-void putBCDint(unsigned int);
+void putBCDint(unsigned short long);
 void ClrScrn(void);
-void printD(unsigned int);
+void printD(unsigned short long);
 

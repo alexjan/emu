@@ -33,7 +33,7 @@ unsigned char getch(void) {
 }
 
 unsigned char get(void) {
-    unsigned char tmpch, count = 10;
+    unsigned char tmpch, count = 5;
     tmpch = getch();
     if (tmpch == 'N');
     else {

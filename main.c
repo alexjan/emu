@@ -5,10 +5,24 @@ __CONFIG(FOSC_INTOSCIO & WDTE_OFF & PWRTE_OFF & MCLRE_OFF & BOREN_ON & LVP_OFF);
 
 bit scan;
 bit press_buttom, edit, blink;
-unsigned char cnt, var;
-unsigned int bufferL, bufferG, cena;
+unsigned char cnt, cnt1, cnt2, var, rotate;
+unsigned short long bufferL, mask;
 extern const unsigned char Kyrilica[];
 unsigned char Char;
+
+union {
+
+    struct {
+        unsigned D1 : 1;
+        unsigned D2 : 1;
+        unsigned D3 : 1;
+        unsigned D4 : 1;
+        unsigned D5 : 1;
+        unsigned D6 : 1;
+        unsigned top : 1;
+    } bits;
+    unsigned char byte;
+} mode;
 
 void main(void) {
     di();
@@ -16,17 +30,79 @@ void main(void) {
     timerIni();
     ei();
     lcdIni();
-
+    mode.byte = 0xFF;
     //    putst("Эмулятор\n");
     //    putst("ver 1.00\n");
     SetAdr(0);
     putst("Набор[л]\n");
     while (true) {
-        var = get();
-        if (var == 'Y') {
-            bufferL += 25;
-        };
+        switch (get()) {
+            case'U':
+                break;
+            case'D':;
+                break;
+            case'Y':
+                //                if (bufferL); // RUN out buffer;
+                //                else {
+                edit = true;
+                mode.byte = 0xFE;
+                mask = 0xFFFFF0;
+                rotate = 0;
+                cnt = 0;
+                //                }
+                break;
+            default:;
+        }
+        if (edit) {
+            switch (get()) {
+                case'U':
+                    if (++cnt > 9)cnt = 0;
+                    bufferL &= mask;
+                    bufferL |= (unsigned short long) cnt << rotate;
+                    blink = true;
+                    printD(bufferL);
+                    break;
+                case'D':
+                    mode.byte = (mode.byte << 1) + 1;
+                    if (!mode.bits.top) {
+                        mode.byte = 0xFE;
+                        mask = 0xFFFFF0;
+                        rotate = 0;
+                    } else {
+                        mask = (mask << 4) + 15;
+                        rotate += 4;
+                    }
+                    cnt = 0;
+                    break;
+                case'Y':edit = false;
+                    mode.byte = 0xFF;
+                    cnt = 0;
+                    break;
+                default:;
+            }
+        } else {
+        }
+
+
         printD(bufferL);
+
+
+
+
+        //        //
+        //
+        //       
+        //        if (var == 'D') {
+        //            if (++cnt1 > 9)cnt1 = 0;
+        //            bufferL &= 0xFF0F;
+        //            bufferL |= cnt1 << 4;
+        //        };
+        //        if (var == 'U') {
+        //            if (++cnt2 > 9)cnt2 = 0;
+        //            bufferL &= 0xF0FF;
+        //            bufferL |= cnt2 << 8;
+        //        };
+
     }
 }
 
@@ -35,8 +111,8 @@ void interrupt my_funct_int(void) {
     if (T0IE && T0IF) {
         if (!tim--) {
             if (!tim_l--) {
-                blink = true; //!blink;
-                tim_l = 25;
+                blink = !blink;
+                tim_l = 20;
             }
             if (scan)Char = scanch();
             tim = 99;
