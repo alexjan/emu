@@ -82,27 +82,7 @@ void main(void) {
             }
         } else {
         }
-
-
         printD(bufferL);
-
-
-
-
-        //        //
-        //
-        //       
-        //        if (var == 'D') {
-        //            if (++cnt1 > 9)cnt1 = 0;
-        //            bufferL &= 0xFF0F;
-        //            bufferL |= cnt1 << 4;
-        //        };
-        //        if (var == 'U') {
-        //            if (++cnt2 > 9)cnt2 = 0;
-        //            bufferL &= 0xF0FF;
-        //            bufferL |= cnt2 << 8;
-        //        };
-
     }
 }
 
